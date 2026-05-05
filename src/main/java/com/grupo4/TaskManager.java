@@ -1,7 +1,9 @@
 package com.grupo4;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TaskManager {
     private final Map<String, Task> tasks = new HashMap<>();
@@ -34,13 +36,18 @@ public class TaskManager {
     }
 
     // RF2 — Buscar tarea por ID
-    public Task findById(String id) {
-        if (!isValidId(id))
-            throw new IllegalArgumentException("ID inválido. Formato requerido: 2 letras y 3 dígitos (ej. AB123).");
-        Task task = tasks.get(id.toUpperCase());
-        if (task == null)
-            throw new IllegalArgumentException("Tarea no encontrada con ID: " + id);
-        return task;
+    public List<Task> findById(String id) {
+        if (id == null || id.isBlank())
+            throw new IllegalArgumentException("El ID de búsqueda no puede estar vacío.");
+
+        List<Task> results = tasks.values().stream()
+                .filter(task -> task.getId().contains(id.toUpperCase()))
+                .collect(Collectors.toList());
+
+        if (results.isEmpty())
+            throw new IllegalArgumentException("No se encontraron tareas con ID que contenga: " + id);
+
+        return results;
     }
 
     public int getTaskCount() { return tasks.size(); }

@@ -2,6 +2,9 @@ package com.grupo4;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskManagerTest {
@@ -86,11 +89,20 @@ class TaskManagerTest {
     // --- Buscar tarea por ID ---
 
     @Test
-    void testBuscarTareaExistente() {
+    void testBuscarTareaPorIdExacto() {
         manager.createTask("GH001", "Reunión", "Reunión de equipo", "MEDIA", "2025-05-10");
-        Task found = manager.findById("GH001");
-        assertEquals("GH001", found.getId());
-        assertEquals("Reunión", found.getTitle());
+        List<Task> results = manager.findById("GH001");
+        assertEquals(1, results.size());
+        assertEquals("GH001", results.get(0).getId());
+    }
+
+    @Test
+    void testBuscarTareaPorIdParcial() {
+        manager.createTask("AB001", "Tarea A", "Desc A", "ALTA", "2025-06-01");
+        manager.createTask("AB002", "Tarea B", "Desc B", "BAJA", "2025-06-02");
+        manager.createTask("CD001", "Tarea C", "Desc C", "MEDIA", "2025-06-03");
+        List<Task> results = manager.findById("AB");
+        assertEquals(2, results.size()); // Solo las que contienen "AB"
     }
 
     @Test
@@ -101,9 +113,9 @@ class TaskManagerTest {
     }
 
     @Test
-    void testBuscarTareaConIdInvalidoLanzaExcepcion() {
+    void testBuscarTareaConIdVacioLanzaExcepcion() {
         assertThrows(IllegalArgumentException.class, () ->
-                manager.findById("999")
+                manager.findById("")
         );
     }
 }
