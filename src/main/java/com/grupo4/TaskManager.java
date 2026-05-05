@@ -12,29 +12,33 @@ public class TaskManager {
         return id != null && id.matches("[A-Za-z]{2}\\d{3}");
     }
 
-    // RF1 — Crear tarea
+    private boolean isValidDate(String date) {
+        return date != null && date.matches("\\d{4}-\\d{2}-\\d{2}");
+    }
+
     public Task createTask(String id, String title, String description, String priority, String dueDate) {
         if (!isValidId(id))
             throw new IllegalArgumentException("ID inválido. Formato requerido: 2 letras y 3 dígitos (ej. AB123).");
         if (tasks.containsKey(id.toUpperCase()))
-            throw new IllegalArgumentException("Ya existe una tarea con el ID: " + id);
+            throw new IllegalArgumentException("Ya existe una tarea con el ID: " + id.toUpperCase());
         if (title == null || title.isBlank())
             throw new IllegalArgumentException("El título es obligatorio.");
         if (description == null || description.isBlank())
             throw new IllegalArgumentException("La descripción es obligatoria.");
-        if (dueDate == null || dueDate.isBlank())
-            throw new IllegalArgumentException("La fecha de vencimiento es obligatoria.");
+        if (priority == null || priority.isBlank())
+            throw new IllegalArgumentException("La prioridad es obligatoria.");
         if (!priority.equalsIgnoreCase("ALTA") &&
                 !priority.equalsIgnoreCase("MEDIA") &&
                 !priority.equalsIgnoreCase("BAJA"))
             throw new IllegalArgumentException("Prioridad inválida. Use: ALTA, MEDIA o BAJA.");
+        if (!isValidDate(dueDate))
+            throw new IllegalArgumentException("Fecha inválida. Formato requerido: yyyy-MM-dd (ej. 2025-12-31).");
 
         Task task = new Task(id.toUpperCase(), title, description, priority.toUpperCase(), dueDate);
         tasks.put(id.toUpperCase(), task);
         return task;
     }
 
-    // RF2 — Buscar tarea por ID (tipo LIKE)
     public List<Task> findById(String id) {
         if (id == null || id.isBlank())
             throw new IllegalArgumentException("El ID de búsqueda no puede estar vacío.");
@@ -44,7 +48,7 @@ public class TaskManager {
                 .collect(Collectors.toList());
 
         if (results.isEmpty())
-            throw new IllegalArgumentException("No se encontraron tareas con ID que contenga: " + id);
+            throw new IllegalArgumentException("No se encontraron tareas con ID que contenga: " + id.toUpperCase());
 
         return results;
     }

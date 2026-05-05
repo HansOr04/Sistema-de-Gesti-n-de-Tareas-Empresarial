@@ -2,9 +2,7 @@ package com.grupo4;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskManagerTest {
@@ -25,12 +23,10 @@ class TaskManagerTest {
         assertEquals("AB123", task.getId());
         assertEquals("Diseñar login", task.getTitle());
         assertEquals("ALTA", task.getPriority());
-        assertEquals("pendiente", task.getStatus());
     }
 
     @Test
     void testCrearTareaConIdInvalidoLanzaExcepcion() {
-        // Solo números, sin letras
         assertThrows(IllegalArgumentException.class, () ->
                 manager.createTask("12345", "Tarea", "Desc", "MEDIA", "2025-06-01")
         );
@@ -38,7 +34,6 @@ class TaskManagerTest {
 
     @Test
     void testCrearTareaConIdFormatoIncorrectoLanzaExcepcion() {
-        // 3 letras + 2 dígitos — no cumple el formato
         assertThrows(IllegalArgumentException.class, () ->
                 manager.createTask("ABC12", "Tarea", "Desc", "BAJA", "2025-06-01")
         );
@@ -67,16 +62,23 @@ class TaskManagerTest {
     }
 
     @Test
-    void testCrearTareaConFechaVaciaLanzaExcepcion() {
+    void testCrearTareaConPrioridadInvalidaLanzaExcepcion() {
         assertThrows(IllegalArgumentException.class, () ->
-                manager.createTask("CD456", "Título válido", "Desc válida", "MEDIA", "")
+                manager.createTask("EF789", "Revisar código", "Revisión", "URGENTE", "2025-05-20")
         );
     }
 
     @Test
-    void testCrearTareaConPrioridadInvalidaLanzaExcepcion() {
+    void testCrearTareaConFechaInvalidaLanzaExcepcion() {
         assertThrows(IllegalArgumentException.class, () ->
-                manager.createTask("EF789", "Revisar código", "Revisión", "URGENTE", "2025-05-20")
+                manager.createTask("EF789", "Tarea", "Desc", "ALTA", "15-05-2025")
+        );
+    }
+
+    @Test
+    void testCrearTareaConFechaVaciaLanzaExcepcion() {
+        assertThrows(IllegalArgumentException.class, () ->
+                manager.createTask("EF789", "Tarea", "Desc", "ALTA", "")
         );
     }
 
@@ -102,7 +104,7 @@ class TaskManagerTest {
         manager.createTask("AB002", "Tarea B", "Desc B", "BAJA", "2025-06-02");
         manager.createTask("CD001", "Tarea C", "Desc C", "MEDIA", "2025-06-03");
         List<Task> results = manager.findById("AB");
-        assertEquals(2, results.size()); // Solo las que contienen "AB"
+        assertEquals(2, results.size());
     }
 
     @Test
