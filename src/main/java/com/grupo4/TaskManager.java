@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 public class TaskManager {
     private final Map<String, Task> tasks = new HashMap<>();
 
-    // Valida que el ID tenga exactamente 2 letras + 3 dígitos (ej. AB123)
     private boolean isValidId(String id) {
         return id != null && id.matches("[A-Za-z]{2}\\d{3}");
     }
@@ -35,7 +34,7 @@ public class TaskManager {
         return task;
     }
 
-    // RF2 — Buscar tarea por ID
+    // RF2 — Buscar tarea por ID (tipo LIKE)
     public List<Task> findById(String id) {
         if (id == null || id.isBlank())
             throw new IllegalArgumentException("El ID de búsqueda no puede estar vacío.");
